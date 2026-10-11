@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}AnonFeedback — Home{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="pill hero__pill">
+    <svg class="icon icon--sm" style="color:var(--color-accent)"><use href="#i-shield"/></svg>
+    <span>Zero-Knowledge Proof demo</span>
+    <span class="pill__dot">·</span>
+    <a href="/feedback">View feedback board →</a>
+  </div>
+
+  <h1 class="hero__title">Anonymous faculty feedback,<br>backed by a zero-knowledge proof.</h1>
+  <p class="hero__lede">
+    AnonFeedback is a college mini-project demonstrating how a college can
+    <strong>verify that feedback comes from an eligible student</strong>
+    without being able to <strong>link a feedback response to that student's
+    identity</strong> through the intended protocol. It uses a 1-out-of-n
+    OR proof of set membership, with a course-scoped nullifier for duplicate
+    prevention.
+  </p>
+</section>
+
+<section class="stack-lg">
+
+  <div class="card stack">
+    <div class="card__eyebrow">Choose a role</div>
+    <h2 class="heading-section">What would you like to do?</h2>
+    <div class="role-grid">
+      <a class="role" href="/admin">
+        <div class="role__icon"><svg><use href="#i-college"/></svg></div>
+        <h3>College / Admin</h3>
+        <p>Issue credentials to students. View the eligible set and the
+          submitted (anonymous) feedback.</p>
+      </a>
+      <a class="role" href="/student">
+        <div class="role__icon"><svg><use href="#i-student"/></svg></div>
+        <h3>Student</h3>
+        <p>Enter your secret, pick a course, write feedback, and submit a
+          zero-knowledge proof of eligibility.</p>
+      </a>
+      <a class="role" href="/feedback">
+        <div class="role__icon"><svg><use href="#i-board"/></svg></div>
+        <h3>Feedback board</h3>
+        <p>Public, read-only view of all verified feedback. No identities,
+          no nullifiers — just the feedback and the course.</p>
+      </a>
+    </div>
+  </div>
+
+  <div class="card stack">
+    <div class="card__eyebrow">How the protocol works</div>
+    <h2 class="heading-section">A one-minute tour</h2>
+    <ol class="howto">
+      <li>
+        <strong>Setup.</strong> A safe prime <code>p</code> and a generator
+        <code>g</code> of a prime-order subgroup are published. Every student
+        has a secret <code>x</code> and a public key
+        <code>Y = g<sup>x</sup></code>.
+      </li>
+      <li>
+        <strong>Issuance.</strong> The college adds each student's
+        <code>Y</code> to the public <em>eligible set</em>
+        <code>S = {Y<sub>1</sub>, …, Y<sub>n</sub>}</code>. The college sees
+        the student's name only at this step.
+      </li>
+      <li>
+        <strong>Proof.</strong> To submit feedback for a course, the student
+        builds a 1-out-of-n OR proof: <em>"I know <code>x</code> such that
+        <code>g<sup>x</sup></code> is one of the <code>Y<sub>j</sub></code> in
+        <code>S</code> — but I won't tell you which."</em> The proof includes
+        a <strong>course-scoped nullifier</strong>
+        <code>N = h<sup>x</sup></code> (where <code>h</code> is derived from
+        the course id) so the same student cannot submit twice for the same
+        course — yet the nullifier is unlinkable across courses and across
+        students.
+      </li>
+      <li>
+        <strong>Verify.</strong> The college checks the proof against
+        <code>S</code>. It accepts if and only if the prover really did know
+        a valid <code>x</code>. The proof transcript is statistically
+        independent of which <code>Y<sub>j</sub></code> was the student's, so
+        the college cannot tell who submitted.
+      </li>
+    </ol>
+    <p class="text-sm text-muted">
+      Full design, security model, and limitations are documented in
+      <code>plan.md</code> and <code>report.md</code>.
+    </p>
+  </div>
+
+</section>
+
+{% endblock %}

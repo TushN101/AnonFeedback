@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}AnonFeedback — Admin{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="pill hero__pill">
+    <svg class="icon icon--sm" style="color:var(--color-accent)"><use href="#i-college"/></svg>
+    <span>College / Registrar console</span>
+  </div>
+  <h1 class="hero__title">Issue credentials, view the eligible set.</h1>
+  <p class="hero__lede">
+    Roleplay the college registrar. You issue credentials to students — the
+    only step where the college sees a name. You also manage courses and can
+    review the submitted (already-anonymous) feedback. The verification path
+    never consults the issuance log.
+  </p>
+</section>
+
+<section class="stack-lg">
+
+  <!-- Issue credential -->
+  <div class="card stack">
+    <div class="card__eyebrow">Step 1</div>
+    <h2 class="heading-section">Issue a credential</h2>
+    <p class="card__lede">
+      Enter a student name. The system generates a fresh secret
+      <code>x</code>, computes <code>Y = g<sup>x</sup></code>, adds
+      <code>Y</code> to the eligible set, and returns the secret. Forward
+      it to the student out-of-band — the server does not retain it.
+    </p>
+    <form id="issue-form" class="form">
+      <div class="form__row">
+        <label class="label" for="issue-name">Student name</label>
+        <input id="issue-name" class="input" type="text" name="name"
+               placeholder="e.g. Alice (CS, roll 23)" required>
+        <div class="form__hint">Names exist only in the issuance log, never in stored feedback.</div>
+      </div>
+      <div class="form__actions">
+        <button type="submit" class="btn btn--primary">
+          <svg class="icon icon--sm"><use href="#i-key"/></svg>
+          Issue credential
+        </button>
+      </div>
+    </form>
+    <div id="issue-result" class="result" hidden></div>
+  </div>
+
+  <!-- Manage courses -->
+  <div class="card stack">
+    <div class="card__eyebrow">Step 2</div>
+    <h2 class="heading-section">Manage courses</h2>
+    <p class="card__lede">
+      Students select from this list via a dropdown. Add more if needed.
+    </p>
+    <form id="course-form" class="form">
+      <div class="form__row">
+        <label class="label" for="course-input">Course id</label>
+        <input id="course-input" class="input" type="text" name="course"
+               placeholder="e.g. COA" required>
+      </div>
+      <div class="form__actions">
+        <button type="submit" class="btn btn--secondary">
+          <svg class="icon icon--sm"><use href="#i-plus"/></svg>
+          Add course
+        </button>
+      </div>
+    </form>
+    <div id="course-list" class="row-tight" style="margin-top: var(--space-3);"></div>
+  </div>
+
+  <!-- Eligible set -->
+  <div class="card stack">
+    <div class="row" style="justify-content: space-between;">
+      <div>
+        <div class="card__eyebrow">Step 3</div>
+        <h2 class="heading-section">Eligible set</h2>
+      </div>
+      <span id="eligible-count" class="badge badge--accent"></span>
+    </div>
+    <p class="card__lede">
+      The public list <code>S</code> of all eligible student public keys.
+      This is the only thing the verifier consults when checking a proof.
+      Minimum required: <code id="min-required">—</code>.
+    </p>
+    <div id="eligible-set" class="eligible-set"></div>
+  </div>
+
+  <!-- Issuance log -->
+  <div class="card stack">
+    <div class="card__eyebrow">Admin-only</div>
+    <h2 class="heading-section">Issuance log</h2>
+    <p class="card__lede">
+      The only place where names and public keys appear together. <strong>Not</strong>
+      consulted by the verification path — shown here purely for admin visibility.
+    </p>
+    <table id="students-table" class="table">
+      <thead>
+        <tr><th>Student name</th><th>Student ID</th><th>Public key (Y)</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- Submitted feedback -->
+  <div class="card stack">
+    <div class="card__eyebrow">Verified submissions</div>
+    <h2 class="heading-section">Submitted feedback (anonymous)</h2>
+    <p class="card__lede">
+      Every record below was verified against the eligible set. No student
+      identifier is stored with feedback. The nullifier shown is a per-course
+      pseudonym, unlinkable across courses and across students.
+    </p>
+    <div id="admin-feedback-list" class="feedback-list"></div>
+  </div>
+
+</section>
+
+{% endblock %}

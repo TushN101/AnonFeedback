@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}AnonFeedback — Feedback board{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="pill hero__pill">
+    <svg class="icon icon--sm" style="color:var(--color-accent)"><use href="#i-board"/></svg>
+    <span>Public feedback board</span>
+  </div>
+  <h1 class="hero__title">Verified, anonymous feedback.</h1>
+  <p class="hero__lede">
+    Every entry below was verified by the college against the public eligible
+    set. The college verified "the submitter is one of the eligible students"
+    but could not learn <em>which</em> from the proof.
+  </p>
+  <div class="row" style="margin-top: var(--space-4);">
+    <button id="refresh-btn" class="btn btn--secondary btn--sm">
+      <svg class="icon icon--sm"><use href="#i-refresh"/></svg>
+      Refresh
+    </button>
+    <span id="board-count" class="badge"></span>
+  </div>
+</section>
+
+<section id="feedback-list" class="feedback-list"></section>
+
+{% endblock %}

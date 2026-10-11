@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}AnonFeedback — Student{% endblock %}
+{% block content %}
+
+<section class="hero">
+  <div class="pill hero__pill">
+    <svg class="icon icon--sm" style="color:var(--color-accent)"><use href="#i-student"/></svg>
+    <span>Student console</span>
+  </div>
+  <h1 class="hero__title">Submit honest, anonymous feedback.</h1>
+  <p class="hero__lede">
+    Paste the secret you received from the college, pick a course, write
+    your feedback, and submit. Your browser asks the server to build the
+    zero-knowledge proof, then submits the proof together with your feedback
+    for verification. Each student may submit only once per course.
+  </p>
+</section>
+
+<section class="stack-lg">
+
+  <div class="callout callout--warning">
+    <svg class="icon callout__icon"><use href="#i-warn"/></svg>
+    <div>
+      <strong>Do not write anything that identifies you.</strong>
+      ("I'm the only one who got an A+", "as the class representative…", etc.)
+      No cryptographic protocol can hide self-identifying content.
+    </div>
+  </div>
+
+  <div class="card stack">
+    <div class="card__eyebrow">Submit feedback</div>
+    <h2 class="heading-section">Feedback form</h2>
+
+    <form id="feedback-form" class="form">
+      <div class="form__row">
+        <label class="label" for="secret">Your secret (issued by the college)</label>
+        <textarea id="secret" class="textarea textarea--mono" name="secret" rows="3"
+                  placeholder="paste the integer secret here" required></textarea>
+        <div class="form__hint">A long number. The server uses it once to build the proof and discards it.</div>
+      </div>
+
+      <div class="form__row">
+        <label class="label" for="course-select">Course</label>
+        <select id="course-select" class="select" name="course" required>
+          <option value="" disabled selected>Pick a course…</option>
+        </select>
+        <div class="form__hint">Courses are predefined by the college — no free-text entry, no spelling mistakes.</div>
+      </div>
+
+      <div class="form__row">
+        <label class="label" for="feedback">Feedback</label>
+        <textarea id="feedback" class="textarea" name="feedback" rows="6"
+                  placeholder="Write your honest, constructive feedback here."
+                  required maxlength="4000"></textarea>
+        <div class="form__hint" id="char-count">0 / 4000 characters</div>
+      </div>
+
+      <div class="form__actions">
+        <button type="submit" class="btn btn--primary btn--lg">
+          <svg class="icon icon--sm"><use href="#i-shield"/></svg>
+          Generate proof &amp; submit
+        </button>
+      </div>
+    </form>
+
+    <div id="submit-result" class="result" hidden></div>
+  </div>
+
+  <div class="card stack">
+    <div class="row" style="justify-content: space-between;">
+      <div>
+        <div class="card__eyebrow">Eligibility check</div>
+        <h2 class="heading-section">Anonymity set</h2>
+      </div>
+      <span id="eligibility-badge" class="badge"></span>
+    </div>
+    <p class="card__lede">
+      The proof will be checked against the current eligible set:
+      <strong id="eligible-size">—</strong> students. Minimum required:
+      <strong id="min-required">—</strong>.
+    </p>
+    <div id="eligibility-note"></div>
+  </div>
+
+</section>
+
+{% endblock %}
