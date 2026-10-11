@@ -10,6 +10,11 @@ and `report.md` §6 for the security model and limitations.
 
 ---
 
+
+<img width="1023" height="767" alt="3" src="https://github.com/user-attachments/assets/23ba76fd-2a7e-499b-b9c0-fb055ad9050a" />
+
+
+
 ## What's in the box
 
 ```
